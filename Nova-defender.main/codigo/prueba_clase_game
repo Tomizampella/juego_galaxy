@@ -1,0 +1,116 @@
+import pygame
+from colores import *
+from laser import *
+from jugador import *
+from alien import *
+import random
+
+class Game:
+    def __init__(self):
+        
+        #Seteo basico
+        pygame.init()
+        pygame.mixer.init()
+        pygame.mixer.music.set_volume(1)
+
+
+        ventana = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
+        fondo = pygame.image.load("Nova-defender.main/imagenes/fondo_nivel_1.png")
+        clock = pygame.time.Clock() #Controlo FPS
+
+
+        #Seteo sonidos
+        musica_fondo = pygame.mixer.Sound("Nova-defender.main/audio/musica_fondo_2.mp3")
+        musica_fondo.set_volume(0.5)
+        musica_fondo.play(loops = -1) #Para que se repita en loop
+
+        explosion_meteorito = pygame.mixer.Sound("Nova-defender.main/audio/explosion_potente.mp3")
+        explosion_meteorito.set_volume(0.05)
+
+        sonido_laser_enemigo = pygame.mixer.Sound("Nova-defender.main/audio/sonido_laser_enemigo.mp3")
+        sonido_laser_enemigo.set_volume(0.05)
+
+        # Creación de los grupos de sprites
+        self.lista_todos_los_sprites = pygame.sprite.Group()
+        self.lista_meteoritos = pygame.sprite.Group()
+        self.lista_enemigos = pygame.sprite.Group()
+        self.lista_balas = pygame.sprite.Group()
+        self.lista_laser_enemigos = pygame.sprite.Group()
+        self.lista_player = pygame.sprite.Group()
+
+        # Creación del jugador
+        self.player = Player(50, 50, self.lista_todos_los_sprites)
+        self.lista_todos_los_sprites.add(self.player)
+
+        # Creación inicial de enemigos y configuración del temporizador
+        self.crear_tres_filas_de_enemigos(6)
+        self.timer_disparo_enemigo = pygame.USEREVENT + 0
+        pygame.time.set_timer(self.timer_disparo_enemigo, 1000)
+
+    def crear_tres_filas_de_enemigos(self, cantidad_enemigos_por_fila):
+        for i in range(cantidad_enemigos_por_fila):
+            for j in range(1,4):
+                enemigo = Enemigo(f"Nova-defender.main/imagenes/nave_enemigo_{j}.png", 53, 45, NEGRO)
+                enemigo.rect.x = enemigo.rect.x + 60 * i + 1
+                enemigo.rect.y = 100 + 100 * (j - 1)
+                self.lista_enemigos.add(enemigo)
+                self.lista_todos_los_sprites.add(enemigo)
+                
+
+    def disparo_enemigo_aleatorio(self):
+        if len(self.lista_enemigos) > 0:
+            random_enemigo = choice(self.lista_enemigos.sprites())
+            laser_sprite_enemigo = Laser(random_enemigo.rect.center, 6, ALTO_VENTANA)
+            lista_todos_los_sprites.add(laser_sprite_enemigo)
+            lista_laser_enemigos.add(laser_sprite_enemigo)
+            sonido_laser_enemigo.play()
+
+    def chequear_colisiones(self):
+        # Implementa tu lógica para chequear colisiones aquí
+        pass
+
+    def dibujar_en_pantalla(self):
+        # Implementa tu lógica para dibujar elementos en pantalla aquí
+        pass
+
+    def run_game(self):
+        running = True
+        clock = pygame.time.Clock()
+
+        while running:
+            cronometro = pygame.time.get_ticks() / 1000
+            lista_eventos = pygame.event.get()
+
+            for evento in lista_eventos:
+                if evento.type == pygame.QUIT:
+                    running = False
+
+                if evento.type == pygame.KEYDOWN:
+                    if evento.key == pygame.K_SPACE:
+                        self.player.disparar()
+
+                if evento.type == self.timer_disparo_enemigo:
+                    self.disparo_enemigo_aleatorio()
+
+            lista_teclas = pygame.key.get_pressed()
+
+            if lista_teclas[pygame.K_LEFT]:
+                self.player.update(-3)
+            if lista_teclas[pygame.K_RIGHT]:
+                self.player.update(3)
+
+            self.chequear_colisiones()
+            self.lista_todos_los_sprites.update()
+            self.dibujar_en_pantalla()
+
+            clock.tick(FPS)
+
+        pygame.quit()
+
+# Inicializar y correr el juego
+if __name__ == "__main__":
+    game = Game()
+    game.run_game()
+    ANCHO_VENTANA = 450
+    ALTO_VENTANA = 700
+    FPS = 60

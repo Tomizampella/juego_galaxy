@@ -40,8 +40,16 @@ class Player(pygame.sprite.Sprite):
             superficie.blit(self.imagen_vidas,ubicacion_en_la_pantalla)#muestra vidas en pantalla // logica bien
         
     def disparar(self):
-        laser_sprite_player = Laser(self.rect.center, -6, self.rect.bottom)
+        laser_sprite_player = Laser(self.rect.center, -6)
         self.grupo_todos_los_sprites.add(laser_sprite_player)
         self.lista_laser_player.add(laser_sprite_player)
         self.sonido_laser.play()
+    
+
+    def posicion_de_inicio (self):
+        self.rect.x = 200
+        self.rect.y = 625
+        self.salud = 3
+        
+        
         
