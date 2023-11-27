@@ -1,7 +1,7 @@
 import pygame
 from colores import *
 import random
-from laser import *
+from clase_laser import *
 
 
 #Enemigo
@@ -54,20 +54,25 @@ class Enemigo (pygame.sprite.Sprite):
 
         # Dibuja el rectángulo verde (indicador de salud)
         pygame.draw.rect(pantalla, VERDE, (self.rect.x, self.rect.y - 10, ancho_salud, 5))
-        
 
     def disparar(self,lista_laser_enemigo):
+        laser_sprite_enemigo = Laser("Nova-defender.main/imagenes/laser_enemigo.png",NEGRO,(self.rect.centerx, self.rect.bottom), 6)
+        lista_laser_enemigo.add(laser_sprite_enemigo)
+        self.sonido_laser.play()
+        
+
+    def disparar_poder(self,lista_laser_enemigo):
         laser_derecha_abajo = Laser("Nova-defender.main/imagenes/laser_final_boss.png",NEGRO,(self.rect.right - 15, self.rect.bottom - 10), 6)
         laser_izquierda_abajo = Laser("Nova-defender.main/imagenes/laser_final_boss.png",NEGRO,(self.rect.left + 15, self.rect.bottom - 10), 6)
         
-
-        # Agregar los láseres a los grupos y listas
-        
         lista_laser_enemigo.add(laser_derecha_abajo)
         lista_laser_enemigo.add(laser_izquierda_abajo)
-        
         self.sonido_laser.play()
+
+    
         
+
+    
        
 
 

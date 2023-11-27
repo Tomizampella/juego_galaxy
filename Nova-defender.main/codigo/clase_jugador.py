@@ -1,7 +1,7 @@
 import pygame
 from colores import *
 import random
-from laser import *
+from clase_laser import *
 
 
 
@@ -86,6 +86,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 200
         self.rect.y = 625
         self.salud = 3
+    
+    def nueva_partida (self):
+        self.posicion_de_inicio()
+        self.puntaje = 0
+        self.barra_poder = 0
+        self.poder_activado = False
     
     def modificar_estadisticas(self, valor_puntaje, valor_vida = 0):
         self.puntaje = self.puntaje + 100 * valor_puntaje
