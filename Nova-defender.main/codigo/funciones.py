@@ -320,10 +320,13 @@ def obtener_top_5_puntajes():
     '''Toma los mejores 5 puntajes y los retorna en una lista de tuplas (nombre,puntaje)'''
 
     with sqlite3.connect("Nova-defender.main/codigo/ranking_puntajes.db") as conexion:
-        cursor = conexion.execute("SELECT nombre, puntaje FROM puntajes ORDER BY puntaje DESC LIMIT 5")
-        top_5_puntajes = cursor.fetchall()  
-        
-        return top_5_puntajes
+        try:
+            cursor = conexion.execute("SELECT nombre, puntaje FROM puntajes ORDER BY puntaje DESC LIMIT 5")
+            top_5_puntajes = cursor.fetchall()  
+            
+            return top_5_puntajes
+        except sqlite3.OperationalError:
+            print("La tabla de puntajes esta vacia")
     
 def mostrar_top_5_en_pantalla(ventana,fuente):
     '''Muestra en pantalla los mejores 5 puntajes'''
