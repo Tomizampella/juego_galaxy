@@ -29,7 +29,24 @@ class Player(pygame.sprite.Sprite):
         self.sonido_laser.set_volume(0.05)
 
         self.cooldown_tiempo = 500  
-        self.ultimo_disparo = 0  
+        self.ultimo_disparo = 0 
+
+        # Cargar imágenes de la animación de fuego
+        self.animacion_fuego = [
+            pygame.image.load("Nova-defender.main/imagenes/fuego_1.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_2.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_3.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_4.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_5.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_6.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_7.png").convert_alpha(),
+            pygame.image.load("Nova-defender.main/imagenes/fuego_8.png").convert_alpha()
+            # Agrega las 6 imágenes restantes de la animación
+            # Asegúrate de escalar y configurar las imágenes como hiciste con las otras imágenes
+        ]
+
+        self.frame_animacion = 0  # Variable para rastrear el marco de la animación
+
 
     def update (self, velocidad_x = 0):
         nueva_x = self.rect.x + velocidad_x
@@ -50,6 +67,16 @@ class Player(pygame.sprite.Sprite):
         ancho_poder = 5 * self.barra_poder 
         pygame.draw.rect(pantalla, GRIS, (self.rect.x, self.rect.bottom + 10, ancho_barra, 5))
         pygame.draw.rect(pantalla,AMARILLO, (self.rect.x, self.rect.bottom + 10, ancho_poder, 5))
+
+        # Animacion fuego
+        imagen_fuego = self.animacion_fuego[self.frame_animacion // 10]
+        rect_imagen_fuego = imagen_fuego.get_rect(midtop=(self.rect.centerx, self.rect.bottom))
+        pantalla.blit(imagen_fuego, rect_imagen_fuego)
+
+        # Avanza al siguiente marco de la animación
+        self.frame_animacion += 1
+        if self.frame_animacion >= len(self.animacion_fuego) * 10:
+            self.frame_animacion = 0  # Reinicia la animación
    
 
     def disparar(self):
